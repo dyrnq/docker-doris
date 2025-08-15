@@ -36,6 +36,7 @@ if [ -n "${FE_SERVERS}" ]; then
 
 
     fe_helper=""
+    fe_helper_choose=""
     mapfile -d, -t feServerArray <<< "${FE_SERVERS}"
     feLength=${#feServerArray[@]}
     if [[ $feLength -gt 1 ]]; then
@@ -54,16 +55,22 @@ if [ -n "${FE_SERVERS}" ]; then
 
 
         if [[ $i == 0 ]]; then
-            fe_helper="--helper ${tmpFeIp}:${tmpFeEditLogPort}"
+            fe_helper_choose="--helper ${tmpFeIp}:${tmpFeEditLogPort}"
+        fi
+
+        if [[ $i == 0 ]]; then
+            :
+        else
+            fe_helper="${fe_helper_choose}"
         fi
     done
 
     fi
 
 
-    if [[ $FE_ID -eq 1 ]]; then
-        fe_helper=""
-    fi
+    # if [[ $FE_ID -eq 1 ]]; then
+    #     fe_helper=""
+    # fi
 
 
     echo "${fe_helper}"
