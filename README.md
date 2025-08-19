@@ -67,6 +67,11 @@ features:
 
 fe can use `--env JACOCO_COVERAGE_OPT="-Xmx3G -Xms3G"` override default `-Xmx8192m -Xms8192m`.
 
+e.g.
+
+```bash
+--env  JACOCO_COVERAGE_OPT="-Xmx3G -Xms3G -XX:+IgnoreUnrecognizedVMOptions -XX:-UseG1GC -XX:+UseZGC"
+```
 
 
 ## ref
