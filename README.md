@@ -63,6 +63,12 @@ features:
 | 3fe-3be    | [usage-demo/k8s/3fe-3be/sts-nopvc.yaml](https://github.com/dyrnq/docker-doris/blob/main/usage-demo/k8s/3fe-3be/sts-nopvc.yaml)    |
 
 
+### JAVA_OPTS AND JAVA_OPTS_FOR_JDK_17
+
+fe can use `--env JACOCO_COVERAGE_OPT="-Xmx3G -Xms3G"` override default `-Xmx8192m -Xms8192m`.
+
+
+
 ## ref
 
 - [github.com/apache/doris](https://github.com/apache/doris)
