@@ -13,8 +13,8 @@ features:
 
 - 1.2.5~1.2.8
 - 2.0.0~2.0.15
-- 2.1.0~2.1.9
-- 3.0.0~3.0.5
+- 2.1.0~2.1.11
+- 3.0.0~3.0.6.2
 
 ## support envs
 
@@ -36,7 +36,11 @@ features:
 | BE_ARROW_FLIGHT_SQL_PORT | 10040         |                                | no       |
 | FE_PRIORITY_NETWORKS     |               |                                | no       |
 | BE_PRIORITY_NETWORKS     |               |                                | no       |
+| DORIS_FE_PROPERTIES      |               |                                | no       |
+| DORIS_BE_PROPERTIES      |               |                                | no       |
 
+
+`DORIS_FE_PROPERTIES` and `DORIS_BE_PROPERTIES` usage: just like `FLINK_PROPERTIES` environment variable for passing configuration values.
 
 ## usage demo
 
