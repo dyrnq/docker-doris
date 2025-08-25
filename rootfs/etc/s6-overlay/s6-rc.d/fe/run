@@ -33,6 +33,8 @@ if [ -n "${FE_SERVERS}" ]; then
         fi
     fi
 
+    this_host_ip=$(hostname -I | awk '{print $1}')
+    this_host_name=$(hostname -f)
 
 
     fe_helper=""
@@ -55,29 +57,34 @@ if [ -n "${FE_SERVERS}" ]; then
 
 
         if [[ $i == 0 ]]; then
-            fe_helper_choose="--helper ${tmpFeIp}:${tmpFeEditLogPort}"
+            fe_helper_choose="${tmpFeIp}:${tmpFeEditLogPort}"
         fi
 
-        if [[ $i == 0 ]]; then
-            :
-        else
-            fe_helper="${fe_helper_choose}"
-        fi
+
     done
 
     fi
 
 
-    # if [[ $FE_ID -eq 1 ]]; then
-    #     fe_helper=""
-    # fi
 
 
-    echo "${fe_helper}"
+
+    if [[ $FE_ID -eq 1 ]]; then
+        fe_helper=""
+    elif grep -q "${this_host_ip}" <<< "${fe_helper_choose}"; then
+        fe_helper=""
+    elif grep -q "${this_host_name}" <<< "${fe_helper_choose}"; then
+        fe_helper=""
+    else
+        fe_helper="--helper ${fe_helper_choose}"
+    fi
+
+
 
     opts="${opts} ${fe_helper}"
 fi
-
+echo "fe_helper_choose=${fe_helper_choose}"
+echo "opts=${opts}"
 
 
 
