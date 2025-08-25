@@ -21,7 +21,7 @@ conf_enable_fqdn_mode(){
 
     file="$1"
     value="$2"
-    set_config_options "${file}" set_config_options "${value}"
+    set_config_options "${file}" enable_fqdn_mode "${value}"
 
 }
 
