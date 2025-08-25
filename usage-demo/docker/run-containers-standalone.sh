@@ -20,6 +20,9 @@ docker run \
 --env DORIS_FE_PROPERTIES="
 sys_log_level: WARN
 log_roll_size_mb: 32" \
+--env DORIS_BE_PROPERTIES="
+sys_log_level: WARNING
+mem_limit: 89%" \
 --privileged=true \
 -p 8030:8030 \
 -p 9030:9030 \
