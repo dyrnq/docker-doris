@@ -6,60 +6,76 @@ set -eo pipefail
 conf_arrow_flight_sql_port(){
     file="$1"
     value="$2"
-    ## check if file is writable
-    if [ -w "$file" ]; then
-        exist=$(grep -v "^#" < "${file}" | yq -p=props -o=yaml | yq 'has("arrow_flight_sql_port")')
-
-        if [ "true" = "$exist" ]; then
-            value_default=$(grep -v "^#" < "${file}" | yq -p=props -o=yaml | yq '.arrow_flight_sql_port')
-            if [[ "${value_default}" != "${value}" ]]; then                
-                sed -i "s/^arrow_flight_sql_port.*/arrow_flight_sql_port = ${value}/g" "$file"
-            fi
-        fi
-    fi
+    set_config_options "${file}" arrow_flight_sql_port "${value}"
 }
 
 conf_priority_networks(){
     file="$1"
     value="$2"
-    ## check if file is writable
-    if [ -w "$file" ]; then
-        exist=$(grep -v "^#" < "${file}" | yq -p=props -o=yaml | yq 'has("priority_networks")')
-
-        if [ "true" = "$exist" ]; then
-            value_default=$(grep -v "^#" < "${file}" | yq -p=props -o=yaml | yq '.priority_networks')
-            if [[ "${value_default}" != "${value}" ]]; then                
-                sed -i "s/^priority_networks.*/priority_networks = ${value}/g" "$file"
-            fi
-        else
-            echo "priority_networks = ${value}" >> "$file" ## append
-        fi
-    fi
+    set_config_options "${file}" priority_networks "${value}"
 }
 
 conf_enable_fqdn_mode(){
 
-    if [[ "${DORIS_VERSION}" < "2.0.0" ]]; then
-        return 0;
-    fi
+    if [[ "${DORIS_VERSION}" < "2.0.0" ]]; then return 0; fi
 
     file="$1"
     value="$2"
+    set_config_options "${file}" set_config_options "${value}"
+
+}
+
+
+
+process_doris_properties() {
+    local doris_config_file=$1
+    local doris_properties_content=$2
+    local config_options=()
+
     ## check if file is writable
+    if [ -w "${doris_config_file}" ]; then
+        local OLD_IFS="$IFS"
+        IFS=$'\n'
+        for prop in $doris_properties_content; do
+            prop=$(echo $prop | tr -d '[:space:]')
+
+            if [ -z "$prop" ]; then
+                continue
+            fi
+
+            IFS=':' read -r key value <<< "$prop"
+
+            # value=$(echo $value | envsubst)
+
+            config_options+=("$key" "$value")
+        done
+        IFS="$OLD_IFS"
+
+        if [ ${#config_options[@]} -ne 0 ]; then
+            set_config_options "${doris_config_file}" "${config_options[@]}"
+        fi
+    else
+        echo "${doris_config_file} NOT writable,skip process properties."
+    fi
+}
+
+set_config_options() {
+    local file="$1"
+    local key="$2"
+    local value="$3"
     if [ -w "$file" ]; then
-        exist=$(grep -v "^#" < "${file}" | yq -p=props -o=yaml | yq 'has("enable_fqdn_mode")')
+        exist=$(grep -v "^#" < "${file}" | yq -p=props -o=yaml | yq "has(\"${key}\")")
 
         if [ "true" = "$exist" ]; then
             ## modify if existed
-            value_default=$(grep -v "^#" < "${file}" | yq -p=props -o=yaml | yq '.enable_fqdn_mode')
-            if [[ "${value_default}" != "${value}" ]]; then
-                sed -i "s/^enable_fqdn_mode.*/enable_fqdn_mode = ${value}/g" "$file"
-            fi
+            sed -i "s/^${key}.*/${key} = ${value}/g" "$file"
         else
-            echo "enable_fqdn_mode = ${value}" >> "$file" ## append
+            echo "${key} = ${value}" >> "$file" ## append
         fi
     fi
+
 }
+
 
 _main() {
     if [ -n "$TZ" ]; then
@@ -75,6 +91,13 @@ _main() {
     if [ -n "${FE_PRIORITY_NETWORKS}" ]; then conf_priority_networks "/opt/apache-doris/fe/conf/fe.conf" "${FE_PRIORITY_NETWORKS}"; fi
     if [ -n "${BE_PRIORITY_NETWORKS}" ]; then conf_priority_networks "/opt/apache-doris/be/conf/be.conf" "${BE_PRIORITY_NETWORKS}"; fi
 
+    if [ -n "${DORIS_FE_PROPERTIES}" ]; then
+        process_doris_properties /opt/apache-doris/fe/conf/fe.conf "${DORIS_FE_PROPERTIES}"
+    fi
+
+    if [ -n "${DORIS_BE_PROPERTIES}" ]; then
+        process_doris_properties /opt/apache-doris/be/conf/be.conf "${DORIS_BE_PROPERTIES}"
+    fi
 
 
 
