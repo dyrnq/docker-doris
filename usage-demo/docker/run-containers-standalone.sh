@@ -17,6 +17,9 @@ docker run \
 --network doris-network \
 --env TZ=Asia/Shanghai \
 --env RUN_MODE=standalone \
+--env DORIS_FE_PROPERTIES="
+sys_log_level: WARN
+log_roll_size_mb: 32" \
 --privileged=true \
 -p 8030:8030 \
 -p 9030:9030 \
@@ -25,7 +28,7 @@ docker run \
 -v "${WORK_DIR}"/std/fe/log:/opt/apache-doris/fe/log \
 -v "${WORK_DIR}"/std/be/storage:/opt/apache-doris/be/storage \
 -v "${WORK_DIR}"/std/be/log:/opt/apache-doris/be/log \
-dyrnq/doris:2.1.7
+dyrnq/doris:3.0.6.2
 
 while true; do
     sleep 3s && docker exec -it std bash -c "mysql -uroot -P9030 -h127.0.0.1 -e 'show frontends;show backends;' " && break;
