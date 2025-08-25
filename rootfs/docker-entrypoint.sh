@@ -30,7 +30,7 @@ conf_enable_fqdn_mode(){
 process_doris_properties() {
     local doris_config_file=$1
     local doris_properties_content=$2
-    local config_options=()
+    # local config_options=()
 
     ## check if file is writable
     if [ -w "${doris_config_file}" ]; then
@@ -47,15 +47,16 @@ process_doris_properties() {
 
             # value=$(echo $value | envsubst)
 
-            config_options+=("$key" "$value")
+            # config_options+=("$key" "$value")
+            set_config_options "${doris_config_file}" "${key}" "${value}"
         done
         IFS="$OLD_IFS"
 
-        if [ ${#config_options[@]} -ne 0 ]; then
-            set_config_options "${doris_config_file}" "${config_options[@]}"
-        fi
+        # if [ ${#config_options[@]} -ne 0 ]; then
+        #     set_config_options "${doris_config_file}" "${config_options[@]}"
+        # fi
     else
-        echo "${doris_config_file} NOT writable,skip process properties."
+        echo "${doris_config_file} NOT writable, skip process properties."
     fi
 }
 
