@@ -20,7 +20,6 @@ services:
         DORIS_BE_PROPERTIES=
         sys_log_level: WARNING
         mem_limit: 89%
-        log_level: 2
     ports:
       - 38030:8030
       - 39030:9030
