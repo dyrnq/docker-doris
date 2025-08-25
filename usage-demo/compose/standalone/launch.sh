@@ -24,6 +24,16 @@ while [ $# -gt 0 ]; do
     shift $(( $# > 0 ? 1 : 0 ))
 done
 
+docker_compose_cmd="docker-compose";
+if command -v docker-compose 2>/dev/null 1>/dev/null; then
+    :
+elif docker compose version; then
+    docker_compose_cmd="docker compose"
+else
+    echo "docker compose Not found,please install..."
+    exit 1;
+fi
+
 
 is_detached() {
     if [ -z "$DETACHED" ]; then
@@ -37,11 +47,11 @@ is_detached() {
 docker network create --driver bridge --subnet=172.20.80.0/24 doris-network 2>/dev/null || true
 
 if [ "$remove_flag" = "1" ]; then
-    echo "will remove all containers, docker-compose down"
-    docker-compose down
+    echo "will remove all containers, ${docker_compose_cmd} down"
+    ${docker_compose_cmd} down
 elif [ "$remove_flag" = "2" ]; then
-    echo "will remove all containers and data, docker-compose down --volumes"
-    docker-compose down --volumes
+    echo "will remove all containers and data, ${docker_compose_cmd} down --volumes"
+    ${docker_compose_cmd} down --volumes
 else
 
   if is_detached; then
