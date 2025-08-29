@@ -51,7 +51,9 @@ dyrnq/doris:3.0.6.2
 
 name="doris-stand"
 docker rm -f $name >/dev/null 2>&1 || true
-mkdir -p $(pwd)/doris/${name}/be/file_cache
+mkdir -p $(pwd)/doris/${name}/be/{file_cache,storage,log}
+mkdir -p $(pwd)/doris/${name}/fe/{doris-meta,log}
+
 docker run \
 -d \
 --restart always \
@@ -72,6 +74,10 @@ deploy_mode:cloud
 sys_log_level: WARNING
 mem_limit: 95%" \
 --privileged=true \
+-v $(pwd)/doris/${name}/fe/doris-meta:/opt/apache-doris/fe/doris-meta \
+-v $(pwd)/doris/${name}/fe/log:/opt/apache-doris/fe/log \
+-v $(pwd)/doris/${name}/be/storage:/opt/apache-doris/be/storage \
+-v $(pwd)/doris/${name}/be/log:/opt/apache-doris/be/log \
 -v $(pwd)/doris/${name}/be/file_cache:/opt/doris/be/file_cache \
 dyrnq/doris:3.0.6.2
 
@@ -137,3 +143,8 @@ insert into testdb.stuff values ("1","tom");
 insert into testdb.stuff values ("2","jerry");
 select * from testdb.stuff;
 EOF
+
+# clean all data and containser
+# rm -rf {doris,fdb,minio}
+# docker rm -f fdb-coord-1 doris-ms doris-minio doris-stand doris-mc
+#
