@@ -74,7 +74,7 @@ fe can use `--env JACOCO_COVERAGE_OPT="-Xmx3G -Xms3G"` override default `-Xmx819
 e.g.
 
 ```bash
---env  JACOCO_COVERAGE_OPT="-Xmx3G -Xms3G -XX:+IgnoreUnrecognizedVMOptions -XX:-UseG1GC -XX:+UseZGC"
+--env  JACOCO_COVERAGE_OPT="-Xmx3G -Xms3G -XX:+UnlockExperimentalVMOptions -XX:+IgnoreUnrecognizedVMOptions -XX:+PrintFlagsFinal -XX:-UseG1GC -XX:+UseZGC"
 ```
 
 
