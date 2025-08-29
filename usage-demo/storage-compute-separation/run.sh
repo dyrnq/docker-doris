@@ -27,11 +27,11 @@ docker exec -it fdb-coord-1 bash -c "fdbcli --exec \"configure new single ssd\""
 docker exec -it fdb-coord-1 bash -c "fdbcli --exec \"status\""
 sleep 5s;
 
-docker rm -f ms >/dev/null 2>&1 || true
+docker rm -f doris-ms >/dev/null 2>&1 || true
 docker run \
 -d \
 --restart always \
---name ms \
+--name doris-ms \
 --env RUN_MODE=ms \
 --network doris-network \
 -e DORIS_MS_PROPERTIES="\
@@ -56,16 +56,18 @@ docker run \
 -d \
 --restart always \
 --name "${name}" \
+--hostname "${name}" \
 --env RUN_MODE=standalone \
 --network doris-network \
 --env TZ=Asia/Shanghai \
 --env DORIS_FE_PROPERTIES="\
-meta_service_endpoint:ms\:5000
+meta_service_endpoint:doris-ms\:5000
 deploy_mode:cloud
 cluster_id:170924324
 sys_log_level: INFO
 log_roll_size_mb: 32" \
 --env DORIS_BE_PROPERTIES="
+enable_file_cache:true
 deploy_mode:cloud
 sys_log_level: WARNING
 mem_limit: 95%" \
@@ -104,6 +106,8 @@ tail -f /dev/null
 # docker exec -it doris-stand bash -c "mysql -uroot -P9030 -h127.0.0.1 -e 'show frontends\G;show backends\G;' "
 
 # https://doris.apache.org/zh-CN/docs/3.0/install/deploy-manually/separating-storage-compute-deploy-manually
+# https://doris.apache.org/zh-CN/docs/3.0/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT#1-%E5%88%9B%E5%BB%BA-hdfs-storage-vault
+
 cat<<'EOF'
 docker exec -it doris-stand bash -c "mysql -uroot -P9030 -h127.0.0.1 -e 'show frontends\G;show backends\G;' "
 
