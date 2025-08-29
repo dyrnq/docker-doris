@@ -1,0 +1,24 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+# shellcheck disable=SC1091
+# shellcheck disable=SC2086
+
+set -eo pipefail
+
+pushd /opt/apache-doris/ms || exit 1
+
+opts=""
+
+if grep -q -E "\-\-console" bin/start.sh; then
+    opts="${opts} --console"
+fi
+
+if ! grep -q exec bin/start.sh; then
+    num=$(sed -n '/DORIS_LOG_TO_STDERR=1/=' bin/start.sh)
+    sed -i "${num},$ s@\"\${bin}\"@exec \"\${bin}\"@" bin/start.sh
+fi
+grep exec bin/start.sh
+cat bin/start.sh
+
+exec gosu doris bin/start.sh ${opts}
+

@@ -99,7 +99,9 @@ _main() {
     if [ -n "${DORIS_BE_PROPERTIES}" ]; then
         process_doris_properties /opt/apache-doris/be/conf/be.conf "${DORIS_BE_PROPERTIES}"
     fi
-
+    if [ -n "${DORIS_MS_PROPERTIES}" ]; then
+        process_doris_properties /opt/apache-doris/ms/conf/doris_cloud.conf "${DORIS_MS_PROPERTIES}"
+    fi
 
 
     if grep -q -i "stand" <<< "${RUN_MODE}"; then
@@ -112,6 +114,8 @@ _main() {
     elif grep -q -i "be" <<< "${RUN_MODE}"; then
         touch /etc/s6-overlay/s6-rc.d/user/contents.d/be
         touch /etc/s6-overlay/s6-rc.d/user/contents.d/cluster
+    elif grep -q -i "ms" <<< "${RUN_MODE}"; then
+        if [ -e /opt/apache-doris/ms/bin/ ]; then touch /etc/s6-overlay/s6-rc.d/user/contents.d/ms; fi
     fi
 
 

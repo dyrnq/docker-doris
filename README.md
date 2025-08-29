@@ -21,7 +21,7 @@ features:
 | env                      | default value | optional value                 | required |
 |--------------------------|---------------|--------------------------------|----------|
 | TZ                       |               | Asia/Shanghai                  | no       |
-| RUN_MODE                 |               | STANDALONE/FE/BE               | yes      |
+| RUN_MODE                 |               | STANDALONE/FE/BE/MS            | yes      |
 | FE_SERVERS               |               | ip or fqdn e.g. fe1:cfe-1:9010 | no       |
 | FE_ID                    |               | 1                              | no       |
 | BE_ADDR                  |               | ip or fqdn e.g. cbe-1:9050     | no       |
@@ -38,7 +38,7 @@ features:
 | BE_PRIORITY_NETWORKS     |               |                                | no       |
 | DORIS_FE_PROPERTIES      |               |                                | no       |
 | DORIS_BE_PROPERTIES      |               |                                | no       |
-
+| DORIS_MS_PROPERTIES      |               |                                | no       |
 
 `DORIS_FE_PROPERTIES` and `DORIS_BE_PROPERTIES` usage: just like `FLINK_PROPERTIES` environment variable for passing configuration values.
 
