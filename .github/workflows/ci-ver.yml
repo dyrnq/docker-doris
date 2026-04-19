@@ -1,5 +1,5 @@
 name: ci-ver
-
+run-name: "Build Version: ${{ inputs.version }}"
 on:
   # push:
   #   branches: [ "main" ]
