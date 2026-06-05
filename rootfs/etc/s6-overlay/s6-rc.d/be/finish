@@ -1,0 +1,12 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+set -eo pipefail
+
+echo "[INFO] be service is stopping... (exit code: ${1}, signal: ${2})"
+
+# Do not restart on abnormal exit to avoid crash loops delaying shutdown.
+# s6-supervise will not restart a longrun whose finish script exits 0
+# when the service dies on a signal (non-zero exit).
+# To allow restart, exit 125 (see s6-supervise docs).
+exit 0

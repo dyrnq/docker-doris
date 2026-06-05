@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+set -eo pipefail
+
+echo "[INFO] ms service is stopping... (exit code: ${1}, signal: ${2})"
+
+# Do not restart on abnormal exit to avoid crash loops delaying shutdown.
+exit 0
