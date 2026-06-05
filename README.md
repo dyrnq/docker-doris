@@ -30,7 +30,7 @@ features:
 | FE_MASTER_IP             |               | ip or fqdn                     | no       |
 | FE_MASTER_PORT           | 9030          |                                | no       |
 | USER                     | root          |                                | no       |
-| PASSWORD                 |               |                                | no       |
+| PASSWD                   |               |                                | no       |
 | ENABLE_FQDN_MODE         | true          | true/false                     | no       |
 | FE_ARROW_FLIGHT_SQL_PORT | 10030         |                                | no       |
 | BE_ARROW_FLIGHT_SQL_PORT | 10040         |                                | no       |
@@ -39,8 +39,9 @@ features:
 | DORIS_FE_PROPERTIES      |               |                                | no       |
 | DORIS_BE_PROPERTIES      |               |                                | no       |
 | DORIS_MS_PROPERTIES      |               |                                | no       |
+| ULIMIT_NOFILE            | 1000000       |                                | no       |
 
-`DORIS_FE_PROPERTIES` and `DORIS_BE_PROPERTIES` usage: just like `FLINK_PROPERTIES` environment variable for passing configuration values.
+`DORIS_FE_PROPERTIES`, `DORIS_BE_PROPERTIES` and `DORIS_MS_PROPERTIES` usage: just like `FLINK_PROPERTIES` environment variable for passing configuration values.
 
 ## usage demo
 
@@ -66,8 +67,14 @@ features:
 | standalone | [usage-demo/k8s/standalone/sts-nopvc.yaml](https://github.com/dyrnq/docker-doris/blob/main/usage-demo/k8s/standalone/sts-nopvc.yaml) |
 | 3fe-3be    | [usage-demo/k8s/3fe-3be/sts-nopvc.yaml](https://github.com/dyrnq/docker-doris/blob/main/usage-demo/k8s/3fe-3be/sts-nopvc.yaml)    |
 
+### storage-compute-separation
 
-### JAVA_OPTS AND JAVA_OPTS_FOR_JDK_17
+| demo                   | path                                                                                                                                                       |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| doris ms + fdb + minio | [usage-demo/storage-compute-separation/run.sh](https://github.com/dyrnq/docker-doris/blob/main/usage-demo/storage-compute-separation/run.sh)               |
+
+
+### JACOCO_COVERAGE_OPT
 
 fe can use `--env JACOCO_COVERAGE_OPT="-Xmx3G -Xms3G"` override default `-Xmx8192m -Xms8192m`.
 
