@@ -59,9 +59,9 @@ fi
 if [ "$base_image"x = "x" ]; then
 
     if [[ $version == 3* || $version == 4* ]]; then
-       base_image="eclipse-temurin:17.0.13_11-jdk-noble"
+       base_image="eclipse-temurin:17.0.21_9-jdk-noble"
     else
-       base_image="eclipse-temurin:8u432-b06-jdk-noble"
+       base_image="eclipse-temurin:8u512-b09-jdk-noble"
     fi
 
 fi
